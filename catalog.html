@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Каталог | ZooStore</title>
+    <link rel="stylesheet" href="styles/main.css">
+</head>
+<body>
+    <header class="header">
+        <div class="logo">
+            <img src="assets/logo.png" alt="ZooStore">
+        </div>
+        <nav class="nav">
+            <a href="index.html">Главная</a>
+            <a href="catalog.html">Каталог</a>
+            <a href="cart.html">Корзина (<span id="cart-counter">0</span>)</a>
+        </nav>
+    </header>
+
+    <section class="catalog">
+        <h2>Все товары</h2>
+        
+        <!-- Фильтры -->
+        <div class="filters">
+            <select id="category-filter">
+                <option value="all">Все категории</option>
+                <option value="food">Корма</option>
+                <option value="toys">Игрушки</option>
+                <option value="accessories">Аксессуары</option>
+            </select>
+            <input type="number" id="price-filter" placeholder="Макс. цена">
+        </div>
+
+        <!-- Контейнер для товаров -->
+        <div class="products-grid" id="catalog-products">
+            <!-- Товары загружаются через JS -->
+        </div>
+    </section>
+
+    <footer class="footer">
+        <p>© 2025 ZooStore</p>
+    </footer>
+
+    <script src="scripts/app.js"></script>
+<script>
+    const allProducts = [
+        { id: 1, name: "Корм для кошек Premium", price: 1500, category: "food", image: "assets/cat-food.jpg" },
+        { id: 2, name: "Корм для собак с говядиной", price: 1800, category: "food", image: "assets/dog-food.jpg" },
+        { id: 3, name: "Интерактивная мышь", price: 650, category: "toys", image: "assets/cat-toy.jpg" },
+        { id: 4, name: "Мяч для собак", price: 450, category: "toys", image: "assets/dog-ball.jpg" },
+        { id: 5, name: "Кожаный ошейник", price: 1200, category: "accessories", image: "assets/collar.jpg" },
+        { id: 6, name: "Переноска для кошек", price: 3200, category: "accessories", image: "assets/carrier.jpg" },
+        { id: 7, name: "Лакомства для грызунов", price: 300, category: "food", image: "assets/rodent-treats.jpg" },
+        { id: 8, name: "Аквариум 50л", price: 4500, category: "accessories", image: "assets/aquarium.jpg" },
+        { id: 9, name: "Груминг-щётка", price: 800, category: "accessories", image: "assets/brush.jpg" },
+        { id: 10, name: "Птичий корм с витаминами", price: 250, category: "food", image: "assets/bird-food.jpg" }
+    ];
+
+        // Функция фильтрации
+        function filterProducts() {
+            const category = document.getElementById('category-filter').value;
+            const maxPrice = document.getElementById('price-filter').value || Infinity;
+
+            const filtered = allProducts.filter(product => {
+                return (category === 'all' || product.category === category) && 
+                       product.price <= maxPrice;
+            });
+
+            renderProducts(filtered);
+        }
+
+        // Функция отрисовки
+        function renderProducts(products) {
+            const container = document.getElementById('catalog-products');
+            container.innerHTML = products.map(product => `
+                <div class="product-card">
+                    <img src="${product.image}" alt="${product.name}">
+                    <h3>${product.name}</h3>
+                    <p>Цена: ${product.price} руб.</p>
+                    <button onclick="addToCart(${product.id})">В корзину</button>
+                </div>
+            `).join('');
+        }
+
+        // Инициализация
+        document.addEventListener('DOMContentLoaded', () => {
+            renderProducts(allProducts);
+            document.getElementById('category-filter').addEventListener('change', filterProducts);
+            document.getElementById('price-filter').addEventListener('input', filterProducts);
+        });
+
+    </script>
+</body>
+</html>
